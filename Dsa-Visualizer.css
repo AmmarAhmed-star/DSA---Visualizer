@@ -1,0 +1,9 @@
+/* DSA Visualizer */
+body{margin:0;background:#f8fafc;font-family:sans-serif;text-align:center;color:#0f172a}
+h1{margin-top:20px}
+#visualizer{display:flex;align-items:flex-end;justify-content:center;height:350px;gap:3px;padding:20px;background:#fff;margin:20px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.bar{background:linear-gradient(to top,#0ea5e9,#38bdf8);width:18px;border-radius:4px 4px 0 0;transition:.2s}
+.bar.active{background:#ef4444}
+.controls{margin:20px}
+.controls button{background:#0f172a;color:#fff;border:none;padding:10px 18px;border-radius:8px;margin:5px;cursor:pointer}
+.controls button:hover{background:#38bdf8;color:#000}
