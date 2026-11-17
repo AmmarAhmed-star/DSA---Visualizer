@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DSA Visualizer - Ammar Ahmed</title>
+<style>
+/* DSA Visualizer - By Ammar Ahmed */
+*{
+  box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,sans-serif;
+  background:linear-gradient(180deg,#06231F 0%,#0A3D38 45%,#0C4A44 100%);
+  color:#F8FAFC;
+  min-height:100vh}
+.topnav{
+  max-width:1100px;
+  margin:0 auto;
+  padding:18px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center}
+.logo{
+  font-weight:800;
+  font-size:22px}
+.live{
+  background:#0A3D38;
+  color:#111;
+  padding:8px 16px;
+  border-radius:999px;
+  font-weight:700;
+  font-size:13px}
+.hero{
+  max-width:1100px;
+  margin:0 auto;
+  padding:24px 20px 6px;
+  text-align:center}
+.hero h1{
+  font-size:clamp(36px,7vw,56px);
+  line-height:1.1;
+  margin:12px 0}
+.hero h1 span{
+  background:linear-gradient(90deg,#7C3AED,#2563EB,#F97316,#F59E0B);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text}
+.hero p{
+  color:#94A3B8;
+  max-width:640px;
+  margin:0 auto;
+  line-height:1.6}
+.pill{
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(94,234,212,.30);
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:600;
+  display:inline-block;
+  margin:4px}
+.wrap{
+  max-width:1100px;
+  margin:0 auto;
+  padding:18px 20px}
+.card{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(94,234,212,.30);
+  border-radius:20px;
+  padding:20px;
+  margin-bottom:16px}
+.tabs{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:14px}
+.tab{
+  padding:10px 16px;
+  border-radius:999px;
+  background:rgba(255,255,255,.9);
+  border:1px solid rgba(94,234,212,.30);
+  color:#fff;
+  cursor:pointer;
+  font-weight:700;
+  font-size:14px}
+.tab.active{
+  background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);
+  border-color:transparent}
+.controls{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center}
+.controls label{
+  font-size:13px;
+  color:#94A3B8}
+.controls select,.controls input[type=number]{
+  background:#0A3D38;
+  border:1px solid rgba(255,255,255,.15);
+  color:#fff;
+  padding:10px 12px;
+  border-radius:10px;
+  font-size:14px}
+.controls input[type=range]{
+  accent-color:#2DD4BF}
+button{
+  padding:12px 16px;
+  border:none;
+  border-radius:12px;
+  background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);
+  color:#fff;
+  font-weight:700;
+  cursor:pointer;
+  font-size:14px}
+button.secondary{
+  background:#334155}
+button.green{
+  background:linear-gradient(90deg,#16a34a,#22c55e)}
+button.red{
+  background:#7f1d1d}
+.bars{
+  height:280px;
+  display:flex;
+  align-items:flex-end;
+  gap:4px;
+  background:#06231F;
+  border:1px solid rgba(94,234,212,.22);
+  border-radius:16px;
+  padding:14px;
+  margin:14px 0;
+  overflow:hidden}
+.bar{
+  flex:1;
+  background:linear-gradient(180deg,#A7F3D0,#2DD4BF);
+  border-radius:6px 6px 0 0;
+  min-width:8px;
+  transition:height .18s, background .18s;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  color:#fff;
+  font-size:10px;
+  font-weight:700;
+  padding-top:4px}
+.bar.compare{
+  background:linear-gradient(180deg,#FDE68A,#F59E0B)!important}
+.bar.swap{
+  background:linear-gradient(180deg,#f87171,#dc2626)!important}
+.bar.sorted{
+  background:linear-gradient(180deg,#A7F3D0,#059669)!important}
+.bar.found{
+  background:linear-gradient(180deg,#22d3ee,#0284c7)!important}
+.stats{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap}
+.stat{
+  flex:1;
+  min-width:110px;
+  background:rgba(255,255,255,.75);
+  border-radius:14px;
+  padding:12px;
+  text-align:center}
+.stat b{
+  font-size:22px;
+  display:block}
+.stat span{
+  font-size:12px;
+  color:#94A3B8}
+.code-box{
+  background:#06231F;
+  border:1px solid rgba(94,234,212,.22);
+  border-radius:12px;
+  padding:14px;
+  font-family:monospace;
+  font-size:13px;
+  line-height:1.7;
+  white-space:pre-wrap;
+  color:#7C3AED}
+.box-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center}
+.node{
+  display:inline-flex;
+  align-items:center;
+  gap:8px}
+.node-item{
+  background:linear-gradient(135deg,#7C3AED,#2563EB);
+  padding:14px 16px;
+  border-radius:12px;
+  font-weight:800;
+  min-width:52px;
+  text-align:center}
+.arrow{
+  font-size:22px;
+  color:#facc15;
+  font-weight:800}
+.list-box{
+  background:#06231F;
+  border-radius:14px;
+  padding:16px;
+  min-height:90px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  align-items:center}
+.small{
+  font-size:13px;
+  color:#94A3B8;
+  line-height:1.6}
+.footer{
+  text-align:center;
+  color:#94A3B8;
+  font-size:13px;
+  padding:16px}
+
+.seafoam-glow{box-shadow:0 0 0 1px rgba(94,234,212,.25), 0 12px 32px rgba(45,212,191,.18)}
+.hero h1 span{filter:drop-shadow(0 4px 18px rgba(45,212,191,.35))}
+.tab.active{box-shadow:0 8px 22px rgba(45,212,191,.35)}
+button{box-shadow:0 6px 18px rgba(20,184,166,.28)}
+.bar{box-shadow:0 0 12px rgba(45,212,191,.22)}
+.card{box-shadow:0 10px 30px rgba(0,0,0,.25)}
+
+body{color:#F8FAFC}
+.topnav .logo{color:#F8FAFC}
+.hero p{color:#94A3B8}
+.small{color:#94A3B8}
+.pill{background:#0A3D38;border:1px solid rgba(94,234,212,.35);color:#F8FAFC;box-shadow:0 4px 14px rgba(56,189,248,.15)}
+.card{box-shadow:0 12px 30px rgba(2,132,199,.12);border:1px solid rgba(94,234,212,.30)}
+.tab{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.30)}
+.tab.active{background:linear-gradient(90deg,#0284C7,#2DD4BF);color:#fff}
+.controls select,.controls input[type=number]{color:#F8FAFC;border:1px solid rgba(94,234,212,.35)}
+.bars{background:#FFF7ED;border:1px solid rgba(94,234,212,.30)}
+.bar{color:#F8FAFC}
+.stat{background:#06231F;border:1px solid rgba(94,234,212,.22)}
+.stat span{color:#94A3B8}
+.list-box{background:#06231F;border:1px solid rgba(94,234,212,.22)}
+.footer{color:#94A3B8}
+.footer b{color:#0284C7}
+
+body{color:#F8FAFC;background:linear-gradient(180deg,#06231F 0%,#0A3D38 45%,#0C4A44 100%)}
+.hero h1 span{background:linear-gradient(90deg,#7C3AED,#2563EB,#F97316,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 4px 16px rgba(94,234,212,.30))}
+.pill{background:#0A3D38;border:1px solid rgba(94,234,212,.35);color:#F8FAFC;box-shadow:0 4px 14px rgba(94,234,212,.15)}
+.card{background:rgba(255,255,255,.07);box-shadow:0 14px 34px rgba(124,58,237,.12);border:1px solid rgba(94,234,212,.28)}
+.tab{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.30)}
+.tab.active{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);color:#fff;box-shadow:0 8px 22px rgba(94,234,212,.35)}
+button{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);box-shadow:0 8px 20px rgba(94,234,212,.30)}
+button.green{background:linear-gradient(90deg,#059669,#10B981,#34D399)}
+button.secondary{background:#4C1D95}
+button.red{background:#BE123C}
+.bars{background:linear-gradient(180deg,#FFF7ED,#EFF6FF);border:1px solid rgba(94,234,212,.25)}
+.bar{background:linear-gradient(180deg,#A7F3D0,#2DD4BF);box-shadow:0 0 12px rgba(94,234,212,.25);color:#fff}
+.bar.compare{background:linear-gradient(180deg,#FDE68A,#F59E0B)!important}
+.bar.swap{background:linear-gradient(180deg,#F87171,#DC2626)!important}
+.bar.sorted{background:linear-gradient(180deg,#A7F3D0,#059669)!important}
+.bar.found{background:linear-gradient(180deg,#7DD3FC,#0284C7)!important}
+.stat{background:#06231F;border:1px solid rgba(94,234,212,.20)}
+.node-item{background:linear-gradient(135deg,#7C3AED,#2563EB);color:#fff;box-shadow:0 6px 16px rgba(94,234,212,.30)}
+.footer{color:#94A3B8}
+.footer b{color:#7C3AED}
+
+body{color:#F8FAFC;background:linear-gradient(180deg,#06231F 0%,#0A3D38 45%,#0C4A44 100%)}
+.hero h1 span{background:linear-gradient(90deg,#A7F3D0,#5EEAD4,#2DD4BF,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 4px 18px rgba(94,234,212,.40))}
+.pill{background:#0A3D38;border:1px solid rgba(94,234,212,.40);color:#F8FAFC;box-shadow:0 4px 14px rgba(94,234,212,.18)}
+.card{background:rgba(255,255,255,.07);box-shadow:0 14px 34px rgba(2,6,23,.50);border:1px solid rgba(94,234,212,.30)}
+.tab{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.35)}
+.tab.active{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);color:#fff;box-shadow:0 8px 22px rgba(94,234,212,.40)}
+button{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);box-shadow:0 8px 20px rgba(94,234,212,.30);color:#fff}
+button.green{background:linear-gradient(90deg,#15803D,#2563EB)}
+button.secondary{background:#1E3A8A}
+button.red{background:#991B1B}
+.bars{background:#020617;border:1px solid rgba(94,234,212,.30)}
+.bar{background:linear-gradient(180deg,#A7F3D0,#2DD4BF);box-shadow:0 0 12px rgba(94,234,212,.30);color:#fff}
+.bar.compare{background:linear-gradient(180deg,#FDE68A,#F59E0B)!important}
+.bar.swap{background:linear-gradient(180deg,#F87171,#DC2626)!important}
+.bar.sorted{background:linear-gradient(180deg,#2563EB,#16A34A)!important}
+.bar.found{background:linear-gradient(180deg,#67E8F9,#0284C7)!important}
+.stat{background:#0A3D38;border:1px solid rgba(94,234,212,.25)}
+.stat span{color:#94A3B8}
+.node-item{background:linear-gradient(135deg,#0D9488,#2DD4BF);color:#fff;box-shadow:0 6px 16px rgba(94,234,212,.35)}
+.footer{color:#94A3B8}
+.footer b{color:#2563EB}
+.controls select,.controls input[type=number]{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.40)}
+.code-box{background:#020617;color:#93C5FD}
+.list-box{background:#020617;border:1px solid rgba(94,234,212,.25)}
+
+body{color:#F8FAFC;background:linear-gradient(180deg,#06231F 0%,#0A3D38 45%,#0C4A44 100%)}
+.hero h1 span{background:linear-gradient(90deg,#A7F3D0,#5EEAD4,#2DD4BF,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 4px 20px rgba(94,234,212,.45))}
+.pill{background:#0A3D38;border:1px solid rgba(94,234,212,.50);color:#93C5FD;box-shadow:0 4px 14px rgba(94,234,212,.20)}
+.card{background:rgba(255,255,255,.07);box-shadow:0 14px 34px rgba(0,0,0,.60);border:1px solid rgba(94,234,212,.40)}
+.tab{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.40)}
+.tab.active{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);color:#000;font-weight:800;box-shadow:0 8px 22px rgba(94,234,212,.45)}
+button{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);box-shadow:0 8px 20px rgba(94,234,212,.35);color:#000;font-weight:800}
+button.green{background:linear-gradient(90deg,#14532D,#22C55E)}
+button.secondary{background:#292524;color:#93C5FD}
+button.red{background:#7F1D1D;color:#fff}
+.bars{background:#06231F;border:1px solid rgba(94,234,212,.40)}
+.bar{background:linear-gradient(180deg,#A7F3D0,#2DD4BF);box-shadow:0 0 14px rgba(94,234,212,.35);color:#000}
+.bar.compare{background:linear-gradient(180deg,#FFFFFF,#F59E0B)!important}
+.bar.swap{background:linear-gradient(180deg,#F87171,#DC2626)!important}
+.bar.sorted{background:linear-gradient(180deg,#FEF08A,#CA8A04)!important}
+.bar.found{background:linear-gradient(180deg,#FDE68A,#D97706)!important}
+.stat{background:#0A3D38;border:1px solid rgba(94,234,212,.30)}
+.stat b{color:#2563EB}
+.stat span{color:#A8A29E}
+.node-item{background:linear-gradient(135deg,#0D9488,#2DD4BF);color:#000;box-shadow:0 6px 16px rgba(94,234,212,.40);font-weight:800}
+.footer{color:#A8A29E}
+.footer b{color:#2563EB}
+.controls select,.controls input[type=number]{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.50)}
+.code-box{background:#06231F;color:#93C5FD;border:1px solid rgba(94,234,212,.35)}
+.list-box{background:#06231F;border:1px solid rgba(94,234,212,.30)}
+.live{background:#2563EB!important;color:#000!important}
+.logo{color:#2563EB}
+
+body{color:#F8FAFC;background:linear-gradient(180deg,#06231F 0%,#0A3D38 45%,#0C4A44 100%)}
+.hero h1{color:#F8FAFC}
+.hero h1 span{background:linear-gradient(90deg,#A7F3D0,#5EEAD4,#2DD4BF,#34D399);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:none}
+.hero p{color:#94A3B8}
+.pill{background:#0A3D38;border:1px solid rgba(94,234,212,.30);color:#F8FAFC;box-shadow:0 4px 14px rgba(94,234,212,.10)}
+.card{background:#0A3D38;box-shadow:0 12px 30px rgba(94,234,212,.10);border:1px solid rgba(94,234,212,.20)}
+.tab{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.30)}
+.tab.active{background:linear-gradient(90deg,#0D9488,#14B8A6);color:#fff;box-shadow:0 8px 20px rgba(94,234,212,.30)}
+button{background:linear-gradient(90deg,#0D9488,#14B8A6);box-shadow:0 6px 16px rgba(94,234,212,.25);color:#fff;font-weight:700}
+button.green{background:linear-gradient(90deg,#15803D,#22C55E)}
+button.secondary{background:#334155;color:#fff}
+button.red{background:#DC2626;color:#fff}
+.bars{background:#06231F;border:1px solid rgba(94,234,212,.25)}
+.bar{background:linear-gradient(180deg,#A7F3D0,#2DD4BF);box-shadow:none;color:#fff}
+.bar.compare{background:linear-gradient(180deg,#FDE68A,#F59E0B)!important}
+.bar.swap{background:linear-gradient(180deg,#FCA5A5,#DC2626)!important}
+.bar.sorted{background:linear-gradient(180deg,#86EFAC,#16A34A)!important}
+.bar.found{background:linear-gradient(180deg,#7DD3FC,#0284C7)!important}
+.stat{background:#06231F;border:1px solid rgba(94,234,212,.18)}
+.stat b{color:#0D9488}
+.stat span{color:#94A3B8}
+.node-item{background:linear-gradient(135deg,#0D9488,#2DD4BF);color:#fff;box-shadow:0 6px 14px rgba(94,234,212,.25)}
+.footer{color:#94A3B8}
+.footer b{color:#0D9488}
+.controls select,.controls input[type=number]{background:#0A3D38;color:#F8FAFC;border:1px solid rgba(94,234,212,.35)}
+.code-box{background:#06231F;color:#0D9488;border:1px solid rgba(94,234,212,.25)}
+.list-box{background:#06231F;border:1px solid rgba(94,234,212,.20)}
+.live{background:#fff!important;color:#fff!important}
+.logo{color:#0D9488}
+.small{color:#94A3B8}
+
+.bar{background:linear-gradient(180deg,#A7F3D0,#2DD4BF)!important;box-shadow:0 4px 14px rgba(10,31,68,.35);border-top:2px solid #FDE68A}
+.bar{color:#fff}
+
+body{color:#F8FAFC;background:linear-gradient(180deg,#06231F 0%,#0A3D38 45%,#0C4A44 100%)}
+.hero h1{color:#F8FAFC}
+.hero h1 span{background:linear-gradient(90deg,#A7F3D0,#5EEAD4,#2DD4BF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 4px 18px rgba(45,212,191,.35))}
+.hero p{color:#94A3B8}
+.pill{background:rgba(255,255,255,.08);border:1px solid rgba(94,234,212,.30);color:#F8FAFC}
+.card{background:rgba(255,255,255,.07);border:1px solid rgba(94,234,212,.28);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.tab{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(94,234,212,.28)}
+.tab.active{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);color:#fff;box-shadow:0 8px 22px rgba(45,212,191,.35)}
+button{background:linear-gradient(90deg,#0D9488,#14B8A6,#2DD4BF);box-shadow:0 6px 18px rgba(20,184,166,.28);color:#fff}
+button.green{background:linear-gradient(90deg,#16A34A,#22C55E)}
+button.secondary{background:#334155}
+button.red{background:#7F1D1D}
+.bars{background:rgba(0,0,0,.30);border:1px solid rgba(94,234,212,.22)}
+.bar{background:linear-gradient(180deg,#A7F3D0,#2DD4BF)!important;box-shadow:0 0 12px rgba(45,212,191,.22);color:#06231F;border-top:none}
+.bar.compare{background:linear-gradient(180deg,#FDE68A,#F59E0B)!important}
+.bar.swap{background:linear-gradient(180deg,#F87171,#DC2626)!important}
+.bar.sorted{background:linear-gradient(180deg,#A7F3D0,#059669)!important}
+.bar.found{background:linear-gradient(180deg,#22D3EE,#0284C7)!important}
+.stat{background:rgba(255,255,255,.06);border:1px solid rgba(94,234,212,.18)}
+.stat b{color:#fff}
+.stat span{color:#94A3B8}
+.node-item{background:linear-gradient(135deg,#0D9488,#2DD4BF);color:#fff}
+.footer{color:#94A3B8}
+.footer b{color:#5EEAD4}
+.controls select,.controls input[type=number]{background:rgba(0,0,0,.35);color:#fff;border:1px solid rgba(94,234,212,.30)}
+.code-box{background:#0B0F1E;color:#A7F3D0;border:1px solid rgba(94,234,212,.22)}
+.list-box{background:rgba(0,0,0,.30);border:1px solid rgba(94,234,212,.20)}
+.live{background:#fff!important;color:#111!important}
+.logo{color:#fff}
+.small{color:#94A3B8}
+</style>
+</head>
+<body>
+<div class="topnav"><div class="logo">📊 DSA Visualizer </div><div class="live">● Live on GitHub</div></div>
+<div class="hero"><div class="pill">✦ Learn DSA by Seeing It Work • By Ammar Ahmed</div><h1>See DSA.<br><span>Understand DSA.</span></h1><p>Sorting, Searching, Stack, Queue & Linked List — all with live animation. Understand by seeing, not by memorizing.</p><div><span class="pill">🔥 LIVE</span><span class="pill">⭐ 8+ Features</span><span class="pill">👥 For Students & Interviews</span></div></div>
+<div class="wrap">
+<div class="card">
+<div class="tabs" id="tabs">
+<button class="tab active" type="button" data-tab="sorting" onclick="switchTab('sorting')">📊 Sorting</button>
+<button class="tab" type="button" data-tab="searching" onclick="switchTab('searching')">🔍 Searching</button>
+<button class="tab" type="button" data-tab="stack" onclick="switchTab('stack')">📚 Stack</button>
+<button class="tab" type="button" data-tab="queue" onclick="switchTab('queue')">🚶 Queue</button>
+<button class="tab" type="button" data-tab="linked" onclick="switchTab('linked')">🔗 Linked List</button>
+<button class="tab" type="button" data-tab="quiz" onclick="switchTab('quiz')">🧠 Quiz / Practice</button>
+<button class="tab" type="button" data-tab="tree" onclick="switchTab('tree')">🌳 Binary Tree</button>
+<button class="tab" type="button" data-tab="graph" onclick="switchTab('graph')">🕸️ Graph BFS / DFS</button>
+</div>
+
+<!-- SORTING -->
+<div id="panel-sorting">
+<div class="controls">
+<label>Algorithm</label><select id="sortAlgo"><option value="bubble">Bubble Sort</option><option value="selection">Selection Sort</option><option value="insertion">Insertion Sort</option><option value="merge">Merge Sort</option><option value="quick">Quick Sort</option><option value="heap">Heap Sort</option></select>
+<label>Size: <b id="sizeVal">30</b></label><input type="range" id="sizeRange" min="10" max="60" value="30" oninput="changeSize()">
+<label>Speed</label><input type="range" id="speedRange" min="1" max="100" value="50">
+<button type="button" onclick="generateArray()">🔀 New Array</button>
+<button type="button" class="green" onclick="startSort()">▶️ Start Sorting</button>
+<button type="button" class="red" onclick="stopSort()">⏹️ Stop</button>
+</div>
+<div class="bars" id="bars"></div>
+<div class="stats"><div class="stat"><b id="compCount">0</b><span>Comparisons</span></div><div class="stat"><b id="swapCount">0</b><span>Swaps</span></div><div class="stat"><b id="sortStatus">Ready</b><span>Status</span></div><div class="stat"><b id="sortTime">0 ms</b><span>Time</span></div></div>
+<p class="small" id="sortExplain">Bubble Sort: Compare two neighbors, swap if the left one is bigger. The largest element moves to the end.</p>
+<div class="code-box" id="sortCode">bubbleSort(arr):
+  for i in range(n):
+    for j in range(n-i-1):
+      if arr[j] > arr[j+1]:
+        swap(arr[j], arr[j+1])</div>
+</div>
+
+<!-- SEARCHING -->
+<div id="panel-searching" style="display:none">
+<div class="controls">
+<label>Algorithm</label><select id="searchAlgo"><option value="linear">Linear Search</option><option value="binary">Binary Search (Sorted)</option></select>
+<label>Find Value</label><input type="number" id="searchVal" value="50" style="width:100px">
+<button type="button" onclick="generateArray()">🔀 New Array</button>
+<button type="button" class="green" onclick="startSearch()">🔍 Search</button>
+<button type="button" class="red" onclick="stopSort()">⏹️ Stop</button>
+</div>
+<div class="bars" id="barsSearch"></div>
+<div class="stats"><div class="stat"><b id="searchComp">0</b><span>Checks</span></div><div class="stat"><b id="searchStatus">Ready</b><span>Status</span></div></div>
+<p class="small">Linear: Check one by one. Binary: Only on sorted arrays — check the middle and cut the search in half, much faster.</p>
+</div>
+
+<!-- STACK -->
+<div id="panel-stack" style="display:none">
+<div class="box-row"><input type="number" id="stackVal" value="10" style="width:120px"><button type="button" class="green" onclick="stackPush()">⬆️ Push</button><button type="button" class="red" onclick="stackPop()">⬇️ Pop</button><button type="button" class="secondary" onclick="stackPeek()">👀 Peek</button><button type="button" class="secondary" onclick="stackClear()">🗑️ Clear</button></div>
+<div class="list-box" id="stackBox"><span class="small">Stack is empty. Press Push to add.</span></div>
+<p class="small" id="stackMsg">Stack = LIFO — Last In, First Out. Like a stack of plates — the last plate placed is the first one removed.</p>
+</div>
+
+<!-- QUEUE -->
+<div id="panel-queue" style="display:none">
+<div class="box-row"><input type="number" id="queueVal" value="10" style="width:120px"><button type="button" class="green" onclick="queueEnqueue()">➡️ Enqueue</button><button type="button" class="red" onclick="queueDequeue()">⬅️ Dequeue</button><button type="button" class="secondary" onclick="queueClear()">🗑️ Clear</button></div>
+<div class="list-box" id="queueBox"><span class="small">Queue is empty. Press Enqueue to add.</span></div>
+<p class="small" id="queueMsg">Queue = FIFO — First In, First Out. Like a ticket line — whoever comes first, goes first.</p>
+</div>
+
+<!-- LINKED LIST -->
+<div id="panel-linked" style="display:none">
+<div class="box-row"><input type="number" id="llVal" value="10" style="width:120px"><button type="button" class="green" onclick="llAddHead()">⏮️ Add at Head</button><button type="button" class="green" onclick="llAddTail()">⏭️ Add at Tail</button><button type="button" class="red" onclick="llRemoveHead()">🗑️ Remove Head</button><button type="button" class="red" onclick="llRemoveTail()">🗑️ Remove Tail</button><button type="button" class="secondary" onclick="llClear()">🗑️ Clear</button></div>
+<div class="list-box" id="llBox"><span class="small">Linked List is empty.</span></div>
+<p class="small">Linked List: Each node has a Value + address of the Next node. No fixed size like an Array.</p>
+</div>
+
+</div>
+
+
+<!-- TREE -->
+<div id="panel-tree" style="display:none">
+<h3 style="margin:0">🌳 Binary Search Tree</h3><p class="small">Left me chhota, Right me bada. Inorder = Sorted order me aayega.</p>
+<div class="box-row"><input type="number" id="treeVal" value="50" style="width:120px"><button type="button" class="green" onclick="treeInsert()">➕ Insert</button><button type="button" class="secondary" onclick="treeClear()">🗑️ Clear</button><button type="button" onclick="treeInorder()">Inorder</button><button type="button" onclick="treePreorder()">Preorder</button><button type="button" onclick="treePostorder()">Postorder</button></div>
+<div class="list-box" id="treeBox"><span class="small">Tree empty hai. Value daal ke Insert dabao.</span></div>
+<p class="small" id="treeMsg">Inorder: Left → Root → Right (Sorted). Preorder: Root → Left → Right. Postorder: Left → Right → Root.</p>
+</div>
+<!-- GRAPH -->
+<div id="panel-graph" style="display:none">
+<h3 style="margin:0">🕸️ Graph - BFS / DFS</h3><p class="small">Graph: A-B-C-D-E connected hai. BFS = Level by level, DFS = Deep tak jao.</p>
+<div class="box-row"><button type="button" class="green" onclick="graphBFS()">🔵 Run BFS from A</button><button type="button" onclick="graphDFS()">🟣 Run DFS from A</button><button type="button" class="secondary" onclick="graphReset()">🔄 Reset</button></div>
+<div class="list-box" id="graphBox"><span class="small">Press BFS or DFS to see traversal.</span></div>
+<p class="small" id="graphMsg">BFS uses Queue. DFS uses Stack / Recursion. Interview me sabse zyada pucha jata hai.</p>
+</div>
+<!-- QUIZ / PRACTICE -->
+
+<div id="panel-quiz" style="display:none">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><h3 style="margin:0">🧠 DSA Quiz - Practice Mode</h3><span class="pill">Score: <b id="quizScore">0</b> / <span id="quizTotal">10</span></span></div>
+<p class="small">Answer 10 questions. Each correct answer = +20 points. Perfect for interview revision.</p>
+<div class="card" style="margin:12px 0">
+<p style="font-weight:700;margin:0 0 8px" id="quizQ">Press Start Quiz</p>
+<div id="quizOptions"></div>
+<p id="quizFeedback" style="font-weight:700;min-height:22px"></p>
+</div>
+<div class="controls">
+<button type="button" class="green" onclick="startQuiz()">▶️ Start Quiz</button>
+<button type="button" onclick="nextQuestion()">➡️ Next Question</button>
+<button type="button" class="secondary" onclick="resetQuiz()">🔄 Reset Quiz</button>
+</div>
+<p class="small" id="quizProgress">Question 0 / 10</p>
+</div>
+<div class="card"><h3 style="margin:0 0 8px">🎯 Interview Tip</h3><p class="small" style="margin:0">Interviewers want logic, not just names. Watch the animation, understand the logic first, then memorize the code. Bubble = O(n²), Merge / Quick = O(n log n), Binary Search = O(log n).</p></div>
+</div>
+<div class="footer">Made with ❤️ by <b style="color:#fff">Ammar Ahmed</b> • DSA Visualizer • © 2026</div>
+<script>
+var arr=[]; var running=false; var comp=0; var swaps=0; var startTime=0;
+function sleep(){ var speed=parseInt(document.getElementById('speedRange').value); var ms=105 - speed; return new Promise(function(r){ setTimeout(r, ms); }); }
+function generateArray(){ stopSort(); var n=parseInt(document.getElementById('sizeRange').value); document.getElementById('sizeVal').innerText=n; arr=[]; for(var i=0;i<n;i++) arr.push(Math.floor(Math.random()*90)+10); comp=0; swaps=0; updateStats(); drawBars(); drawSearchBars(); document.getElementById('sortStatus').innerText='Ready'; }
+function changeSize(){ generateArray(); }
+function drawBars(){ var box=document.getElementById('bars'); box.innerHTML=''; arr.forEach(function(v){ var d=document.createElement('div'); d.className='bar'; d.style.height=(v*2.6)+'px'; d.innerText=v; box.appendChild(d); }); }
+function drawSearchBars(){ var box=document.getElementById('barsSearch'); if(!box) return; box.innerHTML=''; arr.forEach(function(v){ var d=document.createElement('div'); d.className='bar'; d.style.height=(v*2.6)+'px'; d.innerText=v; box.appendChild(d); }); }
+function markBars(idxs, cls){ var box=document.getElementById('bars'); var bars=box.children; for(var i=0;i<bars.length;i++) bars[i].classList.remove('compare','swap','sorted'); idxs.forEach(function(ix){ if(bars[ix]) bars[ix].classList.add(cls); }); }
+function markSearchBars(idxs, cls){ var box=document.getElementById('barsSearch'); var bars=box.children; for(var i=0;i<bars.length;i++) bars[i].classList.remove('compare','found','sorted'); idxs.forEach(function(ix){ if(bars[ix]) bars[ix].classList.add(cls); }); }
+function updateStats(){ document.getElementById('compCount').innerText=comp; document.getElementById('swapCount').innerText=swaps; if(startTime) document.getElementById('sortTime').innerText=(Date.now()-startTime)+' ms'; }
+function stopSort(){ running=false; document.getElementById('sortStatus').innerText='Stopped'; }
+function switchTab(tab){ running=false; var allTabs=document.querySelectorAll('.tab'); for(var i=0;i<allTabs.length;i++){ allTabs[i].classList.remove('active'); if(allTabs[i].getAttribute('data-tab')===tab) allTabs[i].classList.add('active'); } var panels=['sorting','searching','stack','queue','linked','quiz','tree','graph']; for(var j=0;j<panels.length;j++){ var el=document.getElementById('panel-'+panels[j]); if(el) el.style.display=(panels[j]===tab)?'block':'none'; } if(tab==='searching') drawSearchBars(); }
+var explains={bubble:'Bubble Sort: Compare two neighbors, swap if the left one is bigger. The largest element moves to the end.',selection:'Selection Sort: Find the smallest element every time and bring it to the front.',insertion:'Insertion Sort: Like sorting playing cards — insert each card into its correct position.',merge:'Merge Sort: Split the array in half, sort each half, then merge. Fast and stable.',quick:'Quick Sort: Pick a pivot, smaller to the left, larger to the right. Then sort both sides.',heap:'Heap Sort: Build a Max-Heap (largest on top), then remove top one by one. Very fast and no extra memory.'};
+var codes={bubble:'bubbleSort(arr):\n  for i in range(n):\n    for j in range(n-i-1):\n      if arr[j] > arr[j+1]:\n        swap(arr[j], arr[j+1])',selection:'selectionSort(arr):\n  for i in range(n):\n    min = i\n    for j in i+1..n:\n      if arr[j] < arr[min]: min = j\n    swap(arr[i], arr[min])',insertion:'insertionSort(arr):\n  for i in 1..n:\n    key = arr[i], j = i-1\n    while j>=0 and arr[j]>key:\n      arr[j+1]=arr[j]; j--\n    arr[j+1]=key',merge:'mergeSort(arr):\n  if len<=1: return arr\n  mid = len/2\n  left = mergeSort(arr[:mid])\n  right = mergeSort(arr[mid:])\n  return merge(left, right)',heap:'heapSort(arr):\n  build max-heap\n  for i = n-1 down to 0:\n    swap(arr[0], arr[i])\n    heapify(arr, 0, i)',quick:'quickSort(arr, low, high):\n  pivot = arr[high]\n  i = low-1\n  for j in low..high:\n    if arr[j] < pivot:\n      i++; swap(arr[i], arr[j])\n  swap(arr[i+1], arr[high])'};
+document.getElementById('sortAlgo').addEventListener('change', function(){ var a=this.value; document.getElementById('sortExplain').innerText=explains[a]; document.getElementById('sortCode').innerText=codes[a]; });
+async function startSort(){ if(running) return; running=true; comp=0; swaps=0; startTime=Date.now(); document.getElementById('sortStatus').innerText='Sorting...'; var algo=document.getElementById('sortAlgo').value; if(algo==='bubble') await bubbleSort(); else if(algo==='selection') await selectionSort(); else if(algo==='insertion') await insertionSort(); else if(algo==='merge') await mergeSort(0, arr.length-1); else if(algo==='quick') await quickSort(0, arr.length-1); else if(algo==='heap') await heapSort(); if(running){ document.getElementById('sortStatus').innerText='Sorted ✅'; var box=document.getElementById('bars'); for(var i=0;i<box.children.length;i++) box.children[i].classList.add('sorted'); } running=false; updateStats(); }
+async function bubbleSort(){ for(var i=0;i<arr.length;i++){ for(var j=0;j<arr.length-i-1;j++){ if(!running) return; comp++; markBars([j,j+1],'compare'); await sleep(); if(arr[j]>arr[j+1]){ var t=arr[j]; arr[j]=arr[j+1]; arr[j+1]=t; swaps++; markBars([j,j+1],'swap'); drawBars(); markBars([j,j+1],'swap'); await sleep(); } updateStats(); } } drawBars(); }
+async function selectionSort(){ for(var i=0;i<arr.length;i++){ var min=i; for(var j=i+1;j<arr.length;j++){ if(!running) return; comp++; markBars([i,j],'compare'); await sleep(); if(arr[j]<arr[min]) min=j; updateStats(); } if(min!==i){ var t=arr[i]; arr[i]=arr[min]; arr[min]=t; swaps++; } drawBars(); } }
+async function insertionSort(){ for(var i=1;i<arr.length;i++){ var key=arr[i]; var j=i-1; while(j>=0 && arr[j]>key){ if(!running) return; comp++; markBars([j,j+1],'compare'); await sleep(); arr[j+1]=arr[j]; swaps++; j--; drawBars(); updateStats(); } arr[j+1]=key; drawBars(); } }
+async function mergeSort(l,r){ if(l>=r || !running) return; var m=Math.floor((l+r)/2); await mergeSort(l,m); await mergeSort(m+1,r); await merge(l,m,r); }
+async function merge(l,m,r){ var left=arr.slice(l,m+1); var right=arr.slice(m+1,r+1); var i=0,j=0,k=l; while(i<left.length && j<right.length){ if(!running) return; comp++; markBars([k],'compare'); await sleep(); if(left[i]<=right[j]){ arr[k]=left[i]; i++; } else { arr[k]=right[j]; j++; } swaps++; k++; drawBars(); updateStats(); } while(i<left.length){ arr[k]=left[i]; i++; k++; drawBars(); await sleep(); } while(j<right.length){ arr[k]=right[j]; j++; k++; drawBars(); await sleep(); } }
+async function quickSort(low,high){ if(low>=high || !running) return; var pi=await partition(low,high); await quickSort(low,pi-1); await quickSort(pi+1,high); }
+async function partition(low,high){ var pivot=arr[high]; var i=low-1; for(var j=low;j<high;j++){ if(!running) return i+1; comp++; markBars([j,high],'compare'); await sleep(); if(arr[j]<pivot){ i++; var t=arr[i]; arr[i]=arr[j]; arr[j]=t; swaps++; drawBars(); updateStats(); } } var t2=arr[i+1]; arr[i+1]=arr[high]; arr[high]=t2; swaps++; drawBars(); return i+1; }
+
+async function heapify(n, i){ var largest=i; var l=2*i+1; var r=2*i+2; if(l<n){ comp++; markBars([largest,l],'compare'); await sleep(); if(arr[l]>arr[largest]) largest=l; } if(r<n){ comp++; markBars([largest,r],'compare'); await sleep(); if(arr[r]>arr[largest]) largest=r; } updateStats(); if(largest!==i){ var t=arr[i]; arr[i]=arr[largest]; arr[largest]=t; swaps++; drawBars(); await sleep(); await heapify(n, largest); } }
+async function heapSort(){ var n=arr.length; for(var i=Math.floor(n/2)-1;i>=0;i--){ if(!running) return; await heapify(n, i); } for(var j=n-1;j>0;j--){ if(!running) return; var t=arr[0]; arr[0]=arr[j]; arr[j]=t; swaps++; drawBars(); await sleep(); await heapify(j, 0); updateStats(); } drawBars(); }
+async function startSearch(){
+ running=true; var val=parseInt(document.getElementById('searchVal').value); var algo=document.getElementById('searchAlgo').value; var checks=0; document.getElementById('searchStatus').innerText='Searching...'; if(algo==='binary'){ arr.sort(function(a,b){ return a-b; }); drawSearchBars(); } if(algo==='linear'){ for(var i=0;i<arr.length;i++){ if(!running) return; checks++; document.getElementById('searchComp').innerText=checks; markSearchBars([i],'compare'); await sleep(); if(arr[i]===val){ markSearchBars([i],'found'); document.getElementById('searchStatus').innerText='Found at index '+i+' ✅'; running=false; return; } } } else { var l=0, r=arr.length-1; while(l<=r){ if(!running) return; var m=Math.floor((l+r)/2); checks++; document.getElementById('searchComp').innerText=checks; markSearchBars([m],'compare'); await sleep(); if(arr[m]===val){ markSearchBars([m],'found'); document.getElementById('searchStatus').innerText='Found at index '+m+' ✅'; running=false; return; } else if(arr[m]<val) l=m+1; else r=m-1; } } document.getElementById('searchStatus').innerText='Not Found ❌'; running=false; }
+// Stack
+var stack=[]; function renderStack(){ var box=document.getElementById('stackBox'); if(!stack.length){ box.innerHTML='<span class="small">Stack is empty.</span>'; return; } box.innerHTML=''; for(var i=stack.length-1;i>=0;i--){ var d=document.createElement('div'); d.className='node-item'; d.innerText=stack[i]; box.appendChild(d); if(i>0){ var a=document.createElement('span'); a.className='arrow'; a.innerText='↓'; box.appendChild(a); } } }
+function stackPush(){ var v=document.getElementById('stackVal').value; if(v===''){ alert('Please enter a value'); return; } stack.push(parseInt(v)); renderStack(); document.getElementById('stackMsg').innerText='Pushed '+v+' ✅ Top is now '+v+'.'; }
+function stackPop(){ if(!stack.length){ alert('Stack is empty!'); return; } var v=stack.pop(); renderStack(); document.getElementById('stackMsg').innerText='Popped '+v+' ✅'; }
+function stackPeek(){ if(!stack.length){ alert('Stack is empty!'); return; } alert('Top = '+stack[stack.length-1]); }
+function stackClear(){ stack=[]; renderStack(); }
+// Queue
+var queue=[]; function renderQueue(){ var box=document.getElementById('queueBox'); if(!queue.length){ box.innerHTML='<span class="small">Queue is empty.</span>'; return; } box.innerHTML=''; queue.forEach(function(v,idx){ var d=document.createElement('div'); d.className='node-item'; d.innerText=v; box.appendChild(d); if(idx<queue.length-1){ var a=document.createElement('span'); a.className='arrow'; a.innerText='→'; box.appendChild(a); } }); }
+function queueEnqueue(){ var v=document.getElementById('queueVal').value; if(v===''){ alert('Please enter a value'); return; } queue.push(parseInt(v)); renderQueue(); document.getElementById('queueMsg').innerText='Enqueued '+v+' ✅'; }
+function queueDequeue(){ if(!queue.length){ alert('Queue is empty!'); return; } var v=queue.shift(); renderQueue(); document.getElementById('queueMsg').innerText='Dequeued '+v+' ✅ Now front = '+(queue[0]!==undefined?queue[0]:'empty'); }
+function queueClear(){ queue=[]; renderQueue(); }
+// Linked List
+var ll=[]; function renderLL(){ var box=document.getElementById('llBox'); if(!ll.length){ box.innerHTML='<span class="small">Linked List is empty.</span>'; return; } box.innerHTML=''; ll.forEach(function(v,idx){ var w=document.createElement('div'); w.className='node'; var d=document.createElement('div'); d.className='node-item'; d.innerText=v; w.appendChild(d); if(idx<ll.length-1){ var a=document.createElement('span'); a.className='arrow'; a.innerText='→'; w.appendChild(a); } else { var e=document.createElement('span'); e.className='small'; e.innerText=' → NULL'; w.appendChild(e); } box.appendChild(w); }); }
+function llAddHead(){ var v=document.getElementById('llVal').value; if(v===''){ alert('Please enter a value'); return; } ll.unshift(parseInt(v)); renderLL(); }
+function llAddTail(){ var v=document.getElementById('llVal').value; if(v===''){ alert('Please enter a value'); return; } ll.push(parseInt(v)); renderLL(); }
+function llRemoveHead(){ if(!ll.length){ alert('List is empty!'); return; } ll.shift(); renderLL(); }
+function llRemoveTail(){ if(!ll.length){ alert('List is empty!'); return; } ll.pop(); renderLL(); }
+function llClear(){ ll=[]; renderLL(); }
+
+// QUIZ - Step 2
+var quizData=[
+{q:"What is the time complexity of Bubble Sort in worst case?", opts:["O(n)", "O(n log n)", "O(n^2)", "O(1)"], ans:2, explain:"Bubble Sort compares every pair, so worst case is O(n^2)."},
+{q:"Which data structure works on LIFO principle?", opts:["Queue", "Stack", "Linked List", "Array"], ans:1, explain:"Stack = Last In, First Out."},
+{q:"What is the time complexity of Binary Search?", opts:["O(n)", "O(log n)", "O(n^2)", "O(n log n)"], ans:1, explain:"Binary Search cuts the array in half every time, so O(log n)."},
+{q:"Which sorting algorithm is fastest in average case?", opts:["Bubble Sort", "Selection Sort", "Merge Sort / Quick Sort", "Insertion Sort"], ans:2, explain:"Merge Sort and Quick Sort are O(n log n) on average."},
+{q:"In a Queue, where is a new element added?", opts:["Front", "Rear / Back", "Middle", "Anywhere"], ans:1, explain:"Queue = FIFO. New element goes to Rear, removal from Front."},
+{q:"What is the time complexity of Merge Sort?", opts:["O(n^2)", "O(n log n)", "O(n)", "O(log n)"], ans:1, explain:"Merge Sort always divides and merges, so O(n log n)."},
+{q:"In a Binary Search Tree, where is the smallest value?", opts:["Root", "Rightmost node", "Leftmost node", "Middle"], ans:2, explain:"BST: Left = smaller. So smallest is leftmost."},
+{q:"Which is FIFO?", opts:["Stack", "Queue", "Tree", "Graph"], ans:1, explain:"Queue = First In, First Out."},
+{q:"What does BFS use?", opts:["Stack", "Queue", "Heap", "Array"], ans:1, explain:"BFS uses Queue for level-by-level traversal."},
+{q:"What is the worst case of Quick Sort?", opts:["O(n log n)", "O(n)", "O(n^2)", "O(log n)"], ans:2, explain:"If pivot is always smallest/largest, Quick Sort becomes O(n^2)."}
+];
+var quizIdx=-1;
+var quizIdx=-1; var quizScore=0;
+function startQuiz(){ quizIdx=0; quizScore=0; document.getElementById('quizScore').innerText=quizScore; showQuestion(); }
+function showQuestion(){ if(quizIdx<0||quizIdx>=quizData.length){ document.getElementById('quizQ').innerText='Quiz Finished! Your Score: '+quizScore+' / '+(quizData.length*20); document.getElementById('quizOptions').innerHTML=''; document.getElementById('quizFeedback').innerText='Great job! Press Start Quiz to play again.'; document.getElementById('quizProgress').innerText='Finished'; return; } var item=quizData[quizIdx]; document.getElementById('quizQ').innerText='Q'+(quizIdx+1)+'. '+item.q; document.getElementById('quizProgress').innerText='Question '+(quizIdx+1)+' / '+quizData.length; document.getElementById('quizFeedback').innerText=''; var h=''; for(var i=0;i<item.opts.length;i++){ h+='<button type="button" class="secondary" style="width:100%;text-align:left;margin:6px 0" onclick="checkAnswer('+i+', this)">'+item.opts[i]+'</button>'; } document.getElementById('quizOptions').innerHTML=h; }
+function checkAnswer(i, btn){ var item=quizData[quizIdx]; var btns=document.getElementById('quizOptions').children; for(var k=0;k<btns.length;k++) btns[k].disabled=true; if(i===item.ans){ quizScore+=20; document.getElementById('quizScore').innerText=quizScore; document.getElementById('quizFeedback').innerText='✅ Correct! '+item.explain; document.getElementById('quizFeedback').style.color='#4ade80'; btn.style.background='#16a34a'; } else { document.getElementById('quizFeedback').innerText='❌ Wrong. Correct answer: '+item.opts[item.ans]+'. '+item.explain; document.getElementById('quizFeedback').style.color='#f87171'; btn.style.background='#dc2626'; btns[item.ans].style.background='#16a34a'; } }
+function nextQuestion(){ if(quizIdx<0){ alert('Press Start Quiz first!'); return; } quizIdx++; showQuestion(); }
+function resetQuiz(){ quizIdx=-1; quizScore=0; document.getElementById('quizScore').innerText=0; document.getElementById('quizQ').innerText='Press Start Quiz'; document.getElementById('quizOptions').innerHTML=''; document.getElementById('quizFeedback').innerText=''; document.getElementById('quizProgress').innerText='Question 0 / 10'; }
+
+
+// TREE + GRAPH - Step 3
+var treeArr=[];
+function renderTree(){ var box=document.getElementById('treeBox'); if(!treeArr.length){ box.innerHTML='<span class="small">Tree empty hai. Value daal ke Insert dabao.</span>'; return; } var sorted=treeArr.slice().sort(function(a,b){return a-b;}); box.innerHTML=''; sorted.forEach(function(v){ var d=document.createElement('div'); d.className='node-item'; d.innerText=v; box.appendChild(d); }); }
+function treeInsert(){ var v=document.getElementById('treeVal').value; if(v===''){ alert('Please enter a value'); return; } treeArr.push(parseInt(v)); renderTree(); document.getElementById('treeMsg').innerText='Inserted '+v+'. Total nodes: '+treeArr.length; }
+function treeClear(){ treeArr=[]; renderTree(); document.getElementById('treeMsg').innerText='Tree cleared.'; }
+function treeInorder(){ if(!treeArr.length){ alert('Tree is empty!'); return; } var s=treeArr.slice().sort(function(a,b){return a-b;}); document.getElementById('treeMsg').innerText='Inorder (Sorted): '+s.join(' → '); }
+function treePreorder(){ if(!treeArr.length){ alert('Tree is empty!'); return; } document.getElementById('treeMsg').innerText='Preorder (Root first): '+treeArr.join(' → '); }
+function treePostorder(){ if(!treeArr.length){ alert('Tree is empty!'); return; } var s=treeArr.slice().reverse(); document.getElementById('treeMsg').innerText='Postorder (Root last): '+s.join(' → '); }
+var graphEdges={A:['B','C'],B:['A','D'],C:['A','D','E'],D:['B','C','E'],E:['C','D']};
+function renderGraph(order, type){ var box=document.getElementById('graphBox'); box.innerHTML=''; order.forEach(function(n){ var d=document.createElement('div'); d.className='node-item'; d.innerText=n; box.appendChild(d); var a=document.createElement('span'); a.className='arrow'; a.innerText='→'; box.appendChild(a); }); var e=document.createElement('span'); e.className='small'; e.innerText=' END'; box.appendChild(e); document.getElementById('graphMsg').innerText=type+' Order: '+order.join(' → '); }
+function graphBFS(){ var visited=[]; var q=['A']; var seen={A:true}; while(q.length){ var n=q.shift(); visited.push(n); graphEdges[n].forEach(function(nb){ if(!seen[nb]){ seen[nb]=true; q.push(nb); } }); } renderGraph(visited,'BFS'); }
+function graphDFS(){ var visited=[]; var seen={}; function dfs(n){ if(seen[n]) return; seen[n]=true; visited.push(n); graphEdges[n].forEach(function(nb){ dfs(nb); }); } dfs('A'); renderGraph(visited,'DFS'); }
+function graphReset(){ document.getElementById('graphBox').innerHTML='<span class="small">Press BFS or DFS to see traversal.</span>'; document.getElementById('graphMsg').innerText='BFS uses Queue. DFS uses Stack / Recursion.'; }
+
+generateArray(); renderStack(); renderTree(); renderQueue(); renderLL();
+</script>
+</body>
+</html>
