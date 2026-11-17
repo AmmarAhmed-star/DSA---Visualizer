@@ -244,11 +244,11 @@ button.red{
 <div class="wrap">
 <div class="card">
 <div class="tabs" id="tabs">
-<button class="tab active" type="button" onclick="switchTab('sorting')">📊 Sorting</button>
-<button class="tab" type="button" onclick="switchTab('searching')">🔍 Searching</button>
-<button class="tab" type="button" onclick="switchTab('stack')">📚 Stack</button>
-<button class="tab" type="button" onclick="switchTab('queue')">🚶 Queue</button>
-<button class="tab" type="button" onclick="switchTab('linked')">🔗 Linked List</button>
+<button class="tab active" type="button" data-tab="sorting" onclick="switchTab('sorting')">📊 Sorting</button>
+<button class="tab" type="button" data-tab="searching" onclick="switchTab('searching')">🔍 Searching</button>
+<button class="tab" type="button" data-tab="stack" onclick="switchTab('stack')">📚 Stack</button>
+<button class="tab" type="button" data-tab="queue" onclick="switchTab('queue')">🚶 Queue</button>
+<button class="tab" type="button" data-tab="linked" onclick="switchTab('linked')">🔗 Linked List</button>
 </div>
 
 <!-- SORTING -->
@@ -307,6 +307,23 @@ button.red{
 </div>
 
 </div>
+
+<!-- QUIZ / PRACTICE -->
+<div id="panel-quiz" style="display:none">
+<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><h3 style="margin:0">🧠 DSA Quiz - Practice Mode</h3><span class="pill">Score: <b id="quizScore">0</b> / <span id="quizTotal">5</span></span></div>
+<p class="small">Answer 5 questions. Each correct answer = +20 points. Perfect for interview revision.</p>
+<div class="card" style="margin:12px 0">
+<p style="font-weight:700;margin:0 0 8px" id="quizQ">Press Start Quiz</p>
+<div id="quizOptions"></div>
+<p id="quizFeedback" style="font-weight:700;min-height:22px"></p>
+</div>
+<div class="controls">
+<button type="button" class="green" onclick="startQuiz()">▶️ Start Quiz</button>
+<button type="button" onclick="nextQuestion()">➡️ Next Question</button>
+<button type="button" class="secondary" onclick="resetQuiz()">🔄 Reset Quiz</button>
+</div>
+<p class="small" id="quizProgress">Question 0 / 5</p>
+</div>
 <div class="card"><h3 style="margin:0 0 8px">🎯 Interview Tip</h3><p class="small" style="margin:0">Interviewers want logic, not just names. Watch the animation, understand the logic first, then memorize the code. Bubble = O(n²), Merge / Quick = O(n log n), Binary Search = O(log n).</p></div>
 </div>
 <div class="footer">Made with ❤️ by <b style="color:#fff">Ammar Ahmed</b> • DSA Visualizer • © 2026</div>
@@ -321,7 +338,7 @@ function markBars(idxs, cls){ var box=document.getElementById('bars'); var bars=
 function markSearchBars(idxs, cls){ var box=document.getElementById('barsSearch'); var bars=box.children; for(var i=0;i<bars.length;i++) bars[i].classList.remove('compare','found','sorted'); idxs.forEach(function(ix){ if(bars[ix]) bars[ix].classList.add(cls); }); }
 function updateStats(){ document.getElementById('compCount').innerText=comp; document.getElementById('swapCount').innerText=swaps; if(startTime) document.getElementById('sortTime').innerText=(Date.now()-startTime)+' ms'; }
 function stopSort(){ running=false; document.getElementById('sortStatus').innerText='Stopped'; }
-function switchTab(tab){ running=false; document.querySelectorAll('.tab').forEach(function(t){ t.classList.remove('active'); }); var tabs=document.getElementById('tabs').children; for(var i=0;i<tabs.length;i++){ if(tabs[i].innerText.toLowerCase().indexOf(tab.substring(0,4))!==-1) tabs[i].classList.add('active'); } ['sorting','searching','stack','queue','linked'].forEach(function(p){ document.getElementById('panel-'+p).style.display=(p===tab)?'block':'none'; }); if(tab==='searching') drawSearchBars(); }
+function switchTab(tab){ running=false; var allTabs=document.querySelectorAll('.tab'); for(var i=0;i<allTabs.length;i++){ allTabs[i].classList.remove('active'); if(allTabs[i].getAttribute('data-tab')===tab) allTabs[i].classList.add('active'); } var panels=['sorting','searching','stack','queue','linked','quiz']; for(var j=0;j<panels.length;j++){ var el=document.getElementById('panel-'+panels[j]); if(el) el.style.display=(panels[j]===tab)?'block':'none'; } if(tab==='searching') drawSearchBars(); }
 var explains={bubble:'Bubble Sort: Compare two neighbors, swap if the left one is bigger. The largest element moves to the end.',selection:'Selection Sort: Find the smallest element every time and bring it to the front.',insertion:'Insertion Sort: Like sorting playing cards — insert each card into its correct position.',merge:'Merge Sort: Split the array in half, sort each half, then merge. Fast and stable.',quick:'Quick Sort: Pick a pivot, smaller to the left, larger to the right. Then sort both sides.'};
 var codes={bubble:'bubbleSort(arr):\n  for i in range(n):\n    for j in range(n-i-1):\n      if arr[j] > arr[j+1]:\n        swap(arr[j], arr[j+1])',selection:'selectionSort(arr):\n  for i in range(n):\n    min = i\n    for j in i+1..n:\n      if arr[j] < arr[min]: min = j\n    swap(arr[i], arr[min])',insertion:'insertionSort(arr):\n  for i in 1..n:\n    key = arr[i], j = i-1\n    while j>=0 and arr[j]>key:\n      arr[j+1]=arr[j]; j--\n    arr[j+1]=key',merge:'mergeSort(arr):\n  if len<=1: return arr\n  mid = len/2\n  left = mergeSort(arr[:mid])\n  right = mergeSort(arr[mid:])\n  return merge(left, right)',quick:'quickSort(arr, low, high):\n  pivot = arr[high]\n  i = low-1\n  for j in low..high:\n    if arr[j] < pivot:\n      i++; swap(arr[i], arr[j])\n  swap(arr[i+1], arr[high])'};
 document.getElementById('sortAlgo').addEventListener('change', function(){ var a=this.value; document.getElementById('sortExplain').innerText=explains[a]; document.getElementById('sortCode').innerText=codes[a]; });
@@ -333,10 +350,4 @@ async function mergeSort(l,r){ if(l>=r || !running) return; var m=Math.floor((l+
 async function merge(l,m,r){ var left=arr.slice(l,m+1); var right=arr.slice(m+1,r+1); var i=0,j=0,k=l; while(i<left.length && j<right.length){ if(!running) return; comp++; markBars([k],'compare'); await sleep(); if(left[i]<=right[j]){ arr[k]=left[i]; i++; } else { arr[k]=right[j]; j++; } swaps++; k++; drawBars(); updateStats(); } while(i<left.length){ arr[k]=left[i]; i++; k++; drawBars(); await sleep(); } while(j<right.length){ arr[k]=right[j]; j++; k++; drawBars(); await sleep(); } }
 async function quickSort(low,high){ if(low>=high || !running) return; var pi=await partition(low,high); await quickSort(low,pi-1); await quickSort(pi+1,high); }
 async function partition(low,high){ var pivot=arr[high]; var i=low-1; for(var j=low;j<high;j++){ if(!running) return i+1; comp++; markBars([j,high],'compare'); await sleep(); if(arr[j]<pivot){ i++; var t=arr[i]; arr[i]=arr[j]; arr[j]=t; swaps++; drawBars(); updateStats(); } } var t2=arr[i+1]; arr[i+1]=arr[high]; arr[high]=t2; swaps++; drawBars(); return i+1; }
-async function startSearch(){ running=true; var val=parseInt(document.getElementById('searchVal').value); var algo=document.getElementById('searchAlgo').value; var checks=0; document.getElementById('searchStatus').innerText='Searching...'; if(algo==='binary'){ arr.sort(function(a,b){ return a-b; }); drawSearchBars(); } if(algo==='linear'){ for(var i=0;i<arr.length;i++){ if(!running) return; checks++; document.getElementById('searchComp').innerText=checks; markSearchBars([i],'compare'); await sleep(); if(arr[i]===val){ markSearchBars([i],'found'); document.getElementById('searchStatus').innerText='Found at index '+i+' ✅'; running=false; return; } } } else { var l=0, r=arr.length-1; while(l<=r){ if(!running) return; var m=Math.floor((l+r)/2); checks++; document.getElementById('searchComp').innerText=checks; markSearchBars([m],'compare'); await sleep(); if(arr[m]===val){ markSearchBars([m],'found'); document.getElementById('searchStatus').innerText='Found at index '+m+' ✅'; running=false; return; } else if(arr[m]<val) l=m+1; else r=m-1; } } document.getElementById('searchStatus').innerText='Not Found ❌'; running=false; }
-// Stack
-var stack=[]; function renderStack(){ var box=document.getElementById('stackBox'); if(!stack.length){ box.innerHTML='<span class="small">Stack is empty.</span>'; return; } box.innerHTML=''; for(var i=stack.length-1;i>=0;i--){ var d=document.createElement('div'); d.className='node-item'; d.innerText=stack[i]; box.appendChild(d); if(i>0){ var a=document.createElement('span'); a.className='arrow'; a.innerText='↓'; box.appendChild(a); } } }
-function stackPush(){ var v=document.getElementById('stackVal').value; if(v===''){ alert('Please enter a value'); return; } stack.push(parseInt(v)); renderStack(); document.getElementById('stackMsg').innerText='Pushed '+v+' ✅ Top is now '+v+'.'; }
-function stackPop(){ if(!stack.length){ alert('Stack is empty!'); return; } var v=stack.pop(); renderStack(); document.getElementById('stackMsg').innerText='Popped '+v+' ✅'; }
-function stackPeek(){ if(!stack.length){ alert('Stack is empty!'); return; } alert('Top = '+stack[stack.length-1]); }
-function stackClear(){ stack=[]; renderS
+async function startSearch(){ running=true; var val=parseInt(document.getElementById('searchVal').value); var algo=document.getElementById('searchAlgo').value; var checks=0; document.getElementById('searchStatus').innerText='Searching...'; if(algo==='binary'){ arr.sort(function(a,b){ return a-b; }); drawSearchBars(); } if(algo==='linear'){ for(var i=0;i<arr.length;i++){ if(!running) return; checks++; document.getElementById('searchComp').innerText=checks; markSearchBars([i],'compare'); await sleep(); if(arr[i]===val){ markSearchBars([i],'found'); document.getElementById('searchStatus').innerText='Found at index '+i+' ✅'; running=false; return; } } } else { var l=0, r=arr.length-1; while(l<=r){ if(!running) return; var m=Math.floor((l+r)/2); checks++; document.getElementById('searchComp').innerText=checks; markSearchBars([m],'compare'); await sleep(); if(arr[m]===val){ markSearchBars([m],'found'); document.getElementById('searchStatus').innerText='Found at index '+m+' ✅'; running=false; return; } else if(arr[m]<val) l=m+1; else r=m-1; } } document.getElementById('searchStatus').innerText='Not Foun
